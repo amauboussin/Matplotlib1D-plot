@@ -7,10 +7,11 @@ import pylab as plt
 #Allow "barbell" plots like 2<x<4 or x<2 *intersection* x>4
 
 class number_line(object):
+	
 	def __init__(self, radius=10, tickmarks = 20):
 
 		self.radius = radius
-		self.span = radius * 1.1 #edges of the graph. leaves room for arrows
+		self.span = radius * 1.1 #total span of the graph. leaves room for arrows
 		self.ceil = radius + 1 #if a plot goes to this point it means it is going to infinity
 		self.floor = -radius - 1 #if a plot goes to this point it means it is going to negative infinity
 		
@@ -27,12 +28,23 @@ class number_line(object):
 		self.drawLine()
 		
 	def setup(self):
-		self.fig1 = plt.figure( facecolor='white') #whole background is white
-		self.ax = plt.axes(frameon=False) #frame is hidden
-		self.ax.axes.get_yaxis().set_visible(False) # turn off y axis
-		self.ax.get_xaxis().tick_bottom() #disable ticks at top of plot
-		self.ax.axes.get_xaxis().set_ticks([]) #sets ticks on bottom to blank
-		plt.axis([-self.span, self.span, -1, 1]) # sets dimensions of axes
+		#whole background is white
+		self.fig1 = plt.figure( facecolor='white') 
+		
+		#frame is hidden
+		self.ax = plt.axes(frameon=False) 
+		
+		# turn off y axis
+		self.ax.axes.get_yaxis().set_visible(False)
+		
+		#disable ticks at top of plot
+		self.ax.get_xaxis().tick_bottom()
+		
+		#sets ticks on bottom to blank
+		self.ax.axes.get_xaxis().set_ticks([]) 
+		
+		# sets dimensions of axes
+		plt.axis([-self.span, self.span, -1, 1]) 
 	
 	#draws the number line
 	def drawLine(self):
@@ -63,22 +75,48 @@ class number_line(object):
 	#draw arrow on plot
 	def arrow(self, coord, color,facingRight=True):
 		tilt = 20 #horizontal left
-		if  facingRight: tilt = -20 #horizontal right
+		if  facingRight: 
+			tilt = -20 #horizontal right
+		
+		#use annotate to draw arrow
 		plt.annotate('', xy=coord,  xycoords='data',
 			xytext=(tilt, 0), textcoords='offset points',
 			arrowprops=dict(arrowstyle="->", linewidth=self.arrow_width , mutation_scale=18,color=color))
 	
 	#graph a series of inequalities
-	def graph(self,eqs):
+	def graph(self, equations):
 		
-		#make equations into a list if it is not already
-		if isinstance(eqs, str):
-			eqs = [eqs]
+		#make so the loop won't go through if equations is a string
+		if isinstance(equations, str):
+			eqs = [equations]
 		
 		#get coordinates to graph
 		toGraph = []
-		for eq in eqs:
+		for eq in equations:
 			toGraph = self.solve(eq,toGraph)
+	
+		for piece in toGraph:
+			
+			#if this piece of the graph is a point
+			if len(piece)==1: 
+				plt.plot(piece,[0],'or', markersize = self.circle_size, markeredgewidth = self.circle_edge_width, zorder=10)
+			
+			#if this piece of the graph is a line
+			elif len(piece)==2: 
+			
+				#if line going to negative infinity with arrow draw 
+				if piece[0]==self.floor: 
+				
+					plt.plot([piece[1]],[0],'or',markerfacecolor='white',markeredgecolor='r',markersize = self.circle_size, markeredgewidth = self.circle_edge_width, zorder=10)
+					plt.plot([-self.radius,piece[1]],[0,0],'-r',linewidth=self.red_linewidth,zorder=5)
+					self.arrow((-self.span,0),'r',facingRight = False)
+				
+				#if line going to positive infinity with arrow
+				if piece[1]==self.ceil:
+				
+					plt.plot([piece[0]],[0],'or',markerfacecolor='white',markeredgecolor='r',markersize = self.circle_size, markeredgewidth = self.circle_edge_width,zorder=10)
+					plt.plot([piece[0],self.radius],[0,0],'-r',linewidth=self.red_linewidth,zorder=5)
+					self.arrow((self.span,0),'r',facingRight = True)
 	
 		for piece in toGraph:
 			
@@ -136,7 +174,7 @@ class number_line(object):
 
 	#save figure to specified location
 	def save(self, filepath, format='png', transparent = True):
-		plt.savefig(filepath, format= format, bbox_inches='tight',transparent = transparent)
+		plt.savefig(filepath, format = format, bbox_inches ='tight',transparent = transparent)
 
 	#clears anything that is graphed
 	def clear(self):
