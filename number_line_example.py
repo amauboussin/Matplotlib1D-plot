@@ -9,7 +9,7 @@ for e in examples:
 	numline.graph(e)
 	numline.save('%s.png' % (e))
 	numline.clear()
-	
+
 #plot all equations on one graph
 numline.graph(examples)
 numline.save('all.png')
@@ -18,3 +18,8 @@ numline.save('all.png')
 larger_numline = number_line(radius = 100, tickmarks = 4)
 larger_numline.graph('x>25')
 larger_numline.save('x>25.png')
+
+#plot points
+points_numline = number_line()
+points_numline.plot_points([-4,1,6])
+points_numline.save('points.png')

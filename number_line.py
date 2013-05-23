@@ -99,7 +99,7 @@ class number_line(object):
 			
 			#if this piece of the graph is a point
 			if len(piece)==1: 
-				plt.plot(piece,[0],'or', markersize = self.circle_size, markeredgewidth = self.circle_edge_width, zorder=10)
+				self.plot_point(piece)
 			
 			#if this piece of the graph is a line
 			elif len(piece)==2: 
@@ -140,7 +140,16 @@ class number_line(object):
 					plt.plot([piece[0]],[0],'or',markerfacecolor='white',markeredgecolor='r',markersize = self.circle_size, markeredgewidth = self.circle_edge_width,zorder=10)
 					plt.plot([piece[0],self.radius],[0,0],'-r',linewidth=self.red_linewidth,zorder=5)
 					self.arrow((self.span,0),'r',facingRight = True)
-				
+	
+	
+	def plot_point(self, p):
+		plt.plot(p,[0],'or', markersize = self.circle_size, markeredgewidth = self.circle_edge_width, zorder=10)
+	
+	#graph a series of points
+	def plot_points(self, points):
+		for p in points:
+			self.plot_point(p)
+	
 	#Turns an equation into coordinates to plot
 	def solve(self,eq, toGraph):
 	    
@@ -162,6 +171,7 @@ class number_line(object):
 		
 		#check if number is valid
 		try:
+			print (string.split(s, splitchar)[-1])
 			number = float(string.split(s, splitchar)[-1])
 		except ValueError:
 			raise Exception("Error parsing equations. Make sure they are of the format x>1 where x is any variable and 1 is any number")
