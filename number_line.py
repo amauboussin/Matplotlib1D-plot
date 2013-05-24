@@ -88,7 +88,7 @@ class number_line(object):
 		
 		#make so the loop won't go through if equations is a string
 		if isinstance(equations, str):
-			eqs = [equations]
+			equations = [equations]
 		
 		#get coordinates to graph
 		toGraph = []
@@ -141,7 +141,7 @@ class number_line(object):
 					plt.plot([piece[0],self.radius],[0,0],'-r',linewidth=self.red_linewidth,zorder=5)
 					self.arrow((self.span,0),'r',facingRight = True)
 	
-	
+	#graphs a single point
 	def plot_point(self, p):
 		plt.plot(p,[0],'or', markersize = self.circle_size, markeredgewidth = self.circle_edge_width, zorder=10)
 	
@@ -171,7 +171,6 @@ class number_line(object):
 		
 		#check if number is valid
 		try:
-			print (string.split(s, splitchar)[-1])
 			number = float(string.split(s, splitchar)[-1])
 		except ValueError:
 			raise Exception("Error parsing equations. Make sure they are of the format x>1 where x is any variable and 1 is any number")
